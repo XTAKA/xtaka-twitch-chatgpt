@@ -8,7 +8,7 @@ import {TwitchBot} from './twitch_bot.js';
 
 // Start keep alive cron job
 job.start();
-console.log(process.env);
+// Removed console.log(process.env) to prevent leaking environment variables
 
 // Setup express app
 const app = express();
@@ -134,12 +134,10 @@ app.ws('/check-for-updates', (ws, req) => {
 });
 
 const messages = [{role: 'system', content: 'You are a helpful Twitch Chatbot.'}];
-console.log('GPT_MODE:', GPT_MODE);
-console.log('History length:', HISTORY_LENGTH);
-console.log('OpenAI API Key:', OPENAI_API_KEY);
-console.log('Model Name:', MODEL_NAME);
+console.log('Server configuration loaded');
 
 app.use(express.json({extended: true, limit: '1mb'}));
+// Keep serving static files
 app.use('/public', express.static('public'));
 
 app.all('/', (req, res) => {

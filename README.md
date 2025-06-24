@@ -62,6 +62,8 @@ Log in with your GitHub account and select your forked repository for deployment
 
 Go to the variables/environment tab in your Render deployment and set the following variables:
 
+> **Note**: The startup log that printed environment variables has been removed from `index.js`. A simple `Server configuration loaded` message is now logged instead.
+
 #### 6.1. Required Variables
 
 - `OPENAI_API_KEY`: Your OpenAI API key.
