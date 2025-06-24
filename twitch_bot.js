@@ -6,7 +6,7 @@ import { promises as fsPromises } from 'fs';
 export class TwitchBot {
     constructor(bot_username, oauth_token, channels, openai_api_key, enable_tts) {
         this.channels = channels;
-        this.client = new tmi.client({
+        this.client = new tmi.Client({
             connection: {
                 reconnect: true,
                 secure: true
