@@ -64,22 +64,15 @@ bot.onDisconnected(reason => {
 });
 
 // Connect bot
-bot.connect(
-    () => {
-        console.log('Bot connected!');
-    },
-    error => {
-        console.error('Bot couldn\'t connect!', error);
-    }
-);
+bot.connect();
 
-bot.onMessage(async (channel, user, message, self) => {
+bot.onMessage(async (channel, userstate, message, self) => {
     if (self) return;
 
     const currentTime = Date.now();
     const elapsedTime = (currentTime - lastResponseTime) / 1000; // Time in seconds
 
-    if (ENABLE_CHANNEL_POINTS === 'true' && user['msg-id'] === 'highlighted-message') {
+    if (ENABLE_CHANNEL_POINTS === 'true' && userstate['msg-id'] === 'highlighted-message') {
         console.log(`Highlighted message: ${message}`);
         if (elapsedTime < COOLDOWN_DURATION) {
             bot.say(channel, `Cooldown active. Please wait ${COOLDOWN_DURATION - elapsedTime.toFixed(1)} seconds before sending another message.`);
@@ -101,7 +94,7 @@ bot.onMessage(async (channel, user, message, self) => {
 
         let text = message.slice(command.length).trim();
         if (SEND_USERNAME === 'true') {
-            text = `Message from user ${user.username}: ${text}`;
+            text = `Message from user ${userstate.username}: ${text}`;
         }
 
         const response = await openaiOps.make_openai_call(text);
@@ -118,7 +111,7 @@ bot.onMessage(async (channel, user, message, self) => {
 
         if (ENABLE_TTS === 'true') {
             try {
-                const ttsAudioUrl = await bot.sayTTS(channel, response, user['userstate']);
+                const ttsAudioUrl = await bot.sayTTS(channel, response, userstate);
                 notifyFileChange(ttsAudioUrl);
             } catch (error) {
                 console.error('TTS Error:', error);
